@@ -1,0 +1,81 @@
+plugins {
+    id 'java'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+    id 'application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+javafx {
+    version = "21"
+    modules = ["javafx.controls", 'javafx.fxml']
+}
+
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+
+application {
+    mainClass = 'GUIClient'
+}
+
+// Lancer le serveur : ./gradlew runServer
+task runServer(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'Server.ServerCentral'
+}
+
+task runServerPush(type : JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'Server.ServerCentralPush'
+}
+
+task runAutoClient(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'Client.AutoClient'
+    args = [project.findProperty('clientId') ?: 'Client1',project.findProperty('nbMod') ?: '5']
+}
+
+task runClientPush(type: JavaExec) {
+    classpath = run.classpath
+    mainClass = 'Client.ClientPushLauncher'
+    doFirst {
+        jvmArgs run.jvmArgs
+    }
+}
+
+task runServerFederate(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'Server.ServerCentralFederate'
+    args = [project.findProperty('port') ?: '12345']
+}
+
+task runServerMaster(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'Server.ServerMaster'
+}
+
+task runServerSlave(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'Server.ServerSlave'
+    args = [project.findProperty('port') ?: '12347']
+}
+
+task runServerDispatch(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'Server.ServerDispatch'
+}
+task runServerReplicated(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'Server.ServerReplicated'
+    args = [project.findProperty('id') ?: '1']
+}
